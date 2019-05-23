@@ -1,6 +1,4 @@
 resource "aws_launch_template" "LT" {
-  #  count = var.spot
-
   name = "${var.cluster_name}-spot"
 
   dynamic instance_market_options {
