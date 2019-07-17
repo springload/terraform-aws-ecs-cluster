@@ -38,6 +38,12 @@ variable "security_groups" {
   default     = []
 }
 
+variable "subnet_ids" {
+  description = "list of subnet ids. By default takes all subnets from the VPC"
+  type        = "list"
+  default     = []
+}
+
 variable "spot" {
   description = "Whether or not use Spot instances. Warning: most likely not suitable for production!"
   default     = false
