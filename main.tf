@@ -1,5 +1,5 @@
 resource "aws_launch_template" "LT" {
-  name = "${var.cluster_name}-spot"
+  name = var.spot ? "${var.cluster_name}-spot" : var.cluster_name
 
   dynamic instance_market_options {
     for_each = var.spot ? [1] : []
