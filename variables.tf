@@ -12,6 +12,12 @@ variable "ami" {
   default     = "amzn2-ami-ecs-hvm-*-x86_64-ebs"
 }
 
+variable "cloud_init_parts" {
+  description = "Allows to provide additional cloud-init parts"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "cpu_unlimited" {
   description = "Whether or not enable t2/t3 cpu unlimited (if true, might incur additional charges)"
   default     = false

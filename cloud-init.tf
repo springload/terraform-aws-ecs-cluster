@@ -11,5 +11,16 @@ data "template_cloudinit_config" "config" {
 
       EOT
   }
+  dynamic "part" {
+    for_each = var.cloud_init_parts
+
+    // as per https://www.terraform.io/docs/providers/template/d/cloudinit_config.html
+    content {
+      content_type = lookup(part.value, "content_type", "")
+      content      = lookup(part.value, "content", "")
+      filename     = lookup(part.value, "filename", "")
+      merge_type   = lookup(part.value, "merge_type", "")
+    }
+  }
 }
 
