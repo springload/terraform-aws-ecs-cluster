@@ -40,13 +40,13 @@ variable "instances_desired" {
 
 variable "security_groups" {
   description = "list of security group names"
-  type        = "list"
+  type        = list
   default     = []
 }
 
 variable "subnet_ids" {
   description = "list of subnet ids. By default takes all subnets from the VPC"
-  type        = "list"
+  type        = list
   default     = []
 }
 
