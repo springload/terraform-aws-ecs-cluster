@@ -21,6 +21,17 @@ resource "aws_launch_template" "LT" {
     arn = aws_iam_instance_profile.ec2-instance-role.arn
   }
 
+  block_device_mappings {
+    device_name = "/dev/xvda"
+
+    ebs {
+      volume_size           = var.disk_size
+      volume_type           = "gp2"
+      delete_on_termination = true
+      encrypted             = var.disk_encrypted
+    }
+  }
+
   key_name   = var.ec2_key_name
   user_data  = data.template_cloudinit_config.config.rendered
   depends_on = [aws_iam_instance_profile.ec2-instance-role]
