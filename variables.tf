@@ -74,6 +74,12 @@ variable "spot" {
   default     = false
 }
 
+variable "tags" {
+  type        = map
+  description = "instances tags"
+  default     = {}
+}
+
 variable "vpc_name" {
   type        = string
   description = "VPC name. If not set, will default to \"default\""
