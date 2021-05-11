@@ -51,7 +51,7 @@ resource "aws_autoscaling_group" "ASG" {
     version = "$Latest"
   }
 
-  vpc_zone_identifier  = coalescelist(var.subnet_ids, list(data.aws_subnet_ids.subnets.ids))
+  vpc_zone_identifier  = coalescelist(var.subnet_ids,tolist(data.aws_subnet_ids.subnets.ids))
   termination_policies = ["OldestInstance"]
 
   tag {
