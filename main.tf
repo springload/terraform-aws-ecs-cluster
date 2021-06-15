@@ -84,5 +84,7 @@ resource "aws_autoscaling_group" "ASG" {
 
 resource "aws_ecs_cluster" "main" {
   name = var.cluster_name
+
+  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
 }
 
