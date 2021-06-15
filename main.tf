@@ -1,7 +1,9 @@
 resource "aws_launch_template" "LT" {
+  count = var.instances_desired > 0 ? 1 : 0
+
   name = var.spot ? "${var.cluster_name}-spot" : var.cluster_name
 
-  dynamic instance_market_options {
+  dynamic "instance_market_options" {
     for_each = var.spot ? [1] : []
 
     content {
@@ -33,11 +35,13 @@ resource "aws_launch_template" "LT" {
   }
 
   key_name   = var.ec2_key_name
-  user_data  = data.template_cloudinit_config.config.rendered
+  user_data  = data.template_cloudinit_config.config[0].rendered
   depends_on = [aws_iam_instance_profile.ec2-instance-role]
 }
 
 resource "aws_autoscaling_group" "ASG" {
+  count = var.instances_desired > 0 ? 1 : 0
+
   name     = var.cluster_name
   max_size = var.instances_desired
   min_size = var.instances_desired
@@ -47,11 +51,11 @@ resource "aws_autoscaling_group" "ASG" {
   force_delete = true
 
   launch_template {
-    id      = aws_launch_template.LT.id
+    id      = aws_launch_template.LT[0].id
     version = "$Latest"
   }
 
-  vpc_zone_identifier  = coalescelist(var.subnet_ids,tolist(data.aws_subnet_ids.subnets.ids))
+  vpc_zone_identifier  = coalescelist(var.subnet_ids, tolist(data.aws_subnet_ids.subnets.ids))
   termination_policies = ["OldestInstance"]
 
   tag {
