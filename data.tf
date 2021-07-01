@@ -18,7 +18,7 @@ data "aws_ami" "ami" {
   owners = ["amazon"]
 }
 
-data "aws_security_group" "group" {
+data "aws_security_groups" "groups" {
   filter {
     name   = "group-name"
     values = var.security_groups
