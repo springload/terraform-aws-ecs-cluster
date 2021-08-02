@@ -10,6 +10,7 @@ data "template_cloudinit_config" "config" {
     content = <<-EOT
       #!/bin/bash
       echo "ECS_CLUSTER=${aws_ecs_cluster.main.name}" >> /etc/ecs/ecs.config
+      %{if var.spot == true}echo "ECS_ENABLE_SPOT_INSTANCE_DRAINING=true" >> /etc/ecs/ecs.config%{endif}
 
       EOT
   }
