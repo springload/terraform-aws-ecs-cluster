@@ -56,6 +56,12 @@ variable "instances_desired" {
   default     = 1
 }
 
+variable "metadata_options" {
+  type        = map
+  description = "Map of metadata options"
+  default     = {}
+}
+
 variable "security_groups" {
   type        = list
   description = "list of security group names"
