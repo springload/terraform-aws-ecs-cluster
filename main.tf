@@ -19,6 +19,19 @@ resource "aws_launch_template" "LT" {
   instance_type          = var.instance_type
   vpc_security_group_ids = data.aws_security_groups.groups.ids
 
+  dynamic "metadata_options" {
+    for_each = length(var.metadata_options) > 0 ? [1] : []
+
+    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options
+    content {
+      http_endpoint               = lookup(var.metadata_options, "http_endpoint", "enabled")
+      http_tokens                 = lookup(var.metadata_options, "http_tokens", "optional")
+      http_put_response_hop_limit = lookup(var.metadata_options, "http_put_response_hop_limit", 1)
+      http_protocol_ipv6          = lookup(var.metadata_options, "http_protocol_ipv6", "disabled")
+      instance_metadata_tags      = lookup(var.metadata_options, "instance_metadata_tags", "disabled")
+    }
+  }
+
   iam_instance_profile {
     arn = aws_iam_instance_profile.ec2-instance-role.arn
   }
