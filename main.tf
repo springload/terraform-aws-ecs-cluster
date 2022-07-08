@@ -71,9 +71,13 @@ resource "aws_autoscaling_group" "ASG" {
   vpc_zone_identifier  = coalescelist(var.subnet_ids, tolist(data.aws_subnet_ids.subnets.ids))
   termination_policies = ["OldestInstance"]
 
-  instance_refresh {
-    strategy = "Rolling"
-    triggers = ["launch_template"]
+  dynamic "instance_refresh" {
+    for_each = var.instance_refresh ? [1] : []
+
+    content {
+        strategy = "Rolling"
+        triggers = ["launch_template"]
+    }
   }
 
   tag {
