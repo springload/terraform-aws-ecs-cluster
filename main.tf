@@ -65,11 +65,20 @@ resource "aws_autoscaling_group" "ASG" {
 
   launch_template {
     id      = aws_launch_template.LT[0].id
-    version = "$Latest"
+    version = aws_launch_template.LT[0].latest_version
   }
 
   vpc_zone_identifier  = coalescelist(var.subnet_ids, tolist(data.aws_subnet_ids.subnets.ids))
   termination_policies = ["OldestInstance"]
+
+  dynamic "instance_refresh" {
+    for_each = var.instance_refresh ? [1] : []
+
+    content {
+        strategy = "Rolling"
+        triggers = ["launch_template"]
+    }
+  }
 
   tag {
     key                 = "Name"

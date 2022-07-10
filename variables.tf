@@ -50,6 +50,12 @@ variable "instance_type" {
   default     = "t3.micro"
 }
 
+variable "instance_refresh" {
+  type        = bool
+  description = "Whether or not refresh the ASG when LT is updated"
+  default     = false
+}
+
 variable "instances_desired" {
   type        = number
   description = "Number of EC2 instances desired"
