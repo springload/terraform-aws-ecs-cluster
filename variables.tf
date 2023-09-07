@@ -11,7 +11,7 @@ variable "cluster_name" {
 variable "ami" {
   type        = string
   description = "Name of the AMI image to use"
-  default     = "amzn2-ami-ecs-hvm-*-x86_64-ebs"
+  default     = ""
 }
 
 variable "cloud_init_parts" {
@@ -59,24 +59,29 @@ variable "instance_refresh" {
 variable "instances_desired" {
   type        = number
   description = "Number of EC2 instances desired"
-  default     = 1
+  default     = 0
+}
+variable "instances_autoscale_max" {
+  type        = number
+  description = "The maximum number of EC2 instances when using autoscaling"
+  default     = 10
 }
 
 variable "metadata_options" {
-  type        = map
+  type        = map(any)
   description = "Map of metadata options"
   default     = {}
 }
 
 variable "security_groups" {
-  type        = list
+  type        = list(any)
   description = "list of security group names"
   default     = []
 }
 
 variable "subnet_ids" {
   description = "list of subnet ids. By default takes all subnets from the VPC"
-  type        = list
+  type        = list(any)
   default     = []
 }
 
@@ -87,7 +92,7 @@ variable "spot" {
 }
 
 variable "tags" {
-  type        = map
+  type        = map(any)
   description = "instances tags"
   default     = {}
 }
