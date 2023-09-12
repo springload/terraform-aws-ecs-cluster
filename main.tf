@@ -59,12 +59,12 @@ resource "aws_autoscaling_group" "ASG" {
 
   name     = var.cluster_name
   max_size = var.instances_desired > 0 ? var.instances_desired : var.instances_autoscale_max
-  min_size = 0
+  min_size = var.instances_desired > 0 ? var.instances_desired : 0
 
   desired_capacity = var.instances_desired
 
   force_delete          = true
-  protect_from_scale_in = true
+  protect_from_scale_in = var.instances_autoscale_max > 0 && var.instances_desired == 0 // if using autoscaling
 
   launch_template {
     id      = aws_launch_template.LT[0].id
@@ -96,10 +96,13 @@ resource "aws_autoscaling_group" "ASG" {
   }
 
   // ecs autoscaling will add it otherwise and we'll get drift
-  tag {
-    key                 = "AmazonECSManaged"
-    value               = ""
-    propagate_at_launch = true
+  dynamic "tag" {
+    for_each = var.instances_autoscale_max > 0 && var.instances_desired == 0 ? [{}] : []
+    content {
+      key                 = "AmazonECSManaged"
+      value               = ""
+      propagate_at_launch = true
+    }
   }
 
   dynamic "tag" {
