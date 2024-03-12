@@ -28,7 +28,7 @@ locals {
 resource "aws_iam_role_policy_attachment" "ec2-role-attach" {
   role = aws_iam_role.ec2-role.name
 
-  count = length(local.managed_roles)
+  count      = length(local.managed_roles)
   policy_arn = element(local.managed_roles, count.index)
 }
 
