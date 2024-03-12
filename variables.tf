@@ -38,6 +38,12 @@ variable "disk_size" {
   default     = 30
 }
 
+variable "disk_type" {
+  type        = string
+  description = "EBS volume type"
+  default     = "gp2"
+}
+
 variable "ec2_key_name" {
   type        = string
   description = "EC2 key name to attach to newly created EC2 instances"

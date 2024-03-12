@@ -43,7 +43,7 @@ resource "aws_launch_template" "LT" {
 
     ebs {
       volume_size           = var.disk_size
-      volume_type           = "gp2"
+      volume_type           = var.disk_type
       delete_on_termination = true
       encrypted             = var.disk_encrypted
     }
