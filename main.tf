@@ -152,7 +152,7 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
 
 
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.ecs_strategy_type == "default" ? [1] : []
+    for_each = var.cluster_strategy_type == "default" ? [1] : []
     content {
       base              = 1
       weight            = 100
@@ -161,7 +161,7 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
   }
 
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.ecs_strategy_type == "fargate" ? [1] : []
+    for_each = var.cluster_strategy_type == "fargate" ? [1] : []
     content {
       base              = 0
       weight            = 1
@@ -170,7 +170,7 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
   }
 
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.ecs_strategy_type == "fargate_spot" ? [1] : []
+    for_each = var.cluster_strategy_type == "fargate_spot" ? [1] : []
     content {
       base              = 0
       weight            = 1
@@ -179,7 +179,7 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
   }
 
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.ecs_strategy_type == "fargate_spot_with_fallback" ? [1] : []
+    for_each = var.cluster_strategy_type == "fargate_spot_with_fallback" ? [1] : []
     content {
       base              = 1 // Ensure at least one task on FARGATE for fallback
       weight            = 0
@@ -188,7 +188,7 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
   }
 
   dynamic "default_capacity_provider_strategy" {
-    for_each = var.ecs_strategy_type == "fargate_spot_with_fallback" ? [1] : []
+    for_each = var.cluster_strategy_type == "fargate_spot_with_fallback" ? [1] : []
     content {
       base              = 0
       weight            = 1

@@ -110,7 +110,7 @@ variable "vpc_name" {
 }
 
 
-variable "ecs_strategy_type" {
+variable "cluster_strategy_type" {
   description = <<-EOD
   Defines the ECS capacity provider strategy. Possible values are:
   - "default": Uses the default capacity provider strategy defined in the ECS cluster.
@@ -122,7 +122,7 @@ variable "ecs_strategy_type" {
   default     = "default"
 
   validation {
-    condition     = contains(["default", "fargate", "fargate_spot", "fargate_spot_with_fallback"], var.ecs_strategy_type)
+    condition     = contains(["default", "fargate", "fargate_spot", "fargate_spot_with_fallback"], var.cluster_strategy_type)
     error_message = "Invalid ECS strategy type. Allowed values are 'default', 'fargate', 'fargate_spot', 'fargate_spot_with_fallback'."
   }
 }
