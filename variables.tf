@@ -108,3 +108,21 @@ variable "vpc_name" {
   description = "VPC name. If not set, will default to \"default\""
   default     = ""
 }
+
+
+variable "ecs_strategy_type" {
+  description = <<-EOD
+  Defines the ECS capacity provider strategy. Possible values are:
+  - "default": Uses the default capacity provider strategy defined in the ECS cluster.
+  - "fargate": Preferentially uses Fargate for task deployments.
+  - "fargate_spot": Preferentially uses Fargate Spot for task deployments.
+  - "fargate_spot_with_fallback": Uses Fargate Spot by default but ensures at least one task runs on Fargate as a fallback.
+  EOD
+  type        = string
+  default     = "default"
+
+  validation {
+    condition     = contains(["default", "fargate", "fargate_spot", "fargate_spot_with_fallback"], var.ecs_strategy_type)
+    error_message = "Invalid ECS strategy type. Allowed values are 'default', 'fargate', 'fargate_spot', 'fargate_spot_with_fallback'."
+  }
+}

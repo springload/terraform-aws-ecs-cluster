@@ -150,10 +150,51 @@ resource "aws_ecs_cluster_capacity_providers" "providers" {
     "FARGATE_SPOT",
   ])
 
-  default_capacity_provider_strategy {
-    base              = 1
-    weight            = 100
-    capacity_provider = var.instances_autoscale_max > 0 && var.instances_desired == 0 ? aws_ecs_capacity_provider.autoscale[0].name : "FARGATE"
+
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.ecs_strategy_type == "default" ? [1] : []
+    content {
+      base              = 1
+      weight            = 100
+      capacity_provider = var.instances_autoscale_max > 0 && var.instances_desired == 0 ? aws_ecs_capacity_provider.autoscale[0].name : "FARGATE"
+    }
   }
+
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.ecs_strategy_type == "fargate" ? [1] : []
+    content {
+      base              = 0
+      weight            = 1
+      capacity_provider = "FARGATE"
+    }
+  }
+
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.ecs_strategy_type == "fargate_spot" ? [1] : []
+    content {
+      base              = 0
+      weight            = 1
+      capacity_provider = "FARGATE_SPOT"
+    }
+  }
+
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.ecs_strategy_type == "fargate_spot_with_fallback" ? [1] : []
+    content {
+      base              = 1 // Ensure at least one task on FARGATE for fallback
+      weight            = 0
+      capacity_provider = "FARGATE"
+    }
+  }
+
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.ecs_strategy_type == "fargate_spot_with_fallback" ? [1] : []
+    content {
+      base              = 0
+      weight            = 1
+      capacity_provider = "FARGATE_SPOT"
+    }
+  }
+
 }
 
