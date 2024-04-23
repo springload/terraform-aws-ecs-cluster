@@ -140,13 +140,18 @@ resource "aws_ecs_capacity_provider" "autoscale" {
 resource "aws_ecs_cluster" "main" {
   name = var.cluster_name
 
-  dynamic "execute_command_configuration" {
-    for_each = var.cluster_logging ? [1] : []
+  dynamic "configuration" {
+    for_each = var.enable_logging ? [1] : []
+
     content {
-      logging = "OVERRIDE"
-      log_configuration {
-        cloud_watch_log_group_name     = aws_cloudwatch_log_group.ecs_exec_logs.name
-        cloud_watch_encryption_enabled = true
+      execute_command_configuration {
+        kms_key_id = aws_kms_key.example.arn
+        logging    = "OVERRIDE"
+
+        log_configuration {
+          cloud_watch_encryption_enabled = true
+          cloud_watch_log_group_name     = aws_cloudwatch_log_group.example[0].name
+        }
       }
     }
   }
