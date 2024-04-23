@@ -139,6 +139,23 @@ resource "aws_ecs_capacity_provider" "autoscale" {
 
 resource "aws_ecs_cluster" "main" {
   name = var.cluster_name
+
+  dynamic "execute_command_configuration" {
+    for_each = var.cluster_logging ? [1] : []
+    content {
+      logging = "OVERRIDE"
+      log_configuration {
+        cloud_watch_log_group_name     = aws_cloudwatch_log_group.ecs_exec_logs.name
+        cloud_watch_encryption_enabled = true
+      }
+    }
+  }
+}
+
+resource "aws_cloudwatch_log_group" "ecs_exec_logs" {
+  count             = var.enable_logging ? 1 : 0
+  name              = "/ecs/${var.cluster_name}/exec"
+  retention_in_days = 30
 }
 
 resource "aws_ecs_cluster_capacity_providers" "providers" {

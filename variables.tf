@@ -109,6 +109,11 @@ variable "vpc_name" {
   default     = ""
 }
 
+variable "cluster_logging" {
+  description = "Enable logging for ECS cluster. Set to true to enable."
+  type        = bool
+  default     = false
+}
 
 variable "cluster_strategy_type" {
   description = <<-EOD
