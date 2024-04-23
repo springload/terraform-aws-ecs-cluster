@@ -153,7 +153,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 resource "aws_cloudwatch_log_group" "ecs_exec_logs" {
-  count             = var.enable_logging ? 1 : 0
+  count             = var.cluster_logging ? 1 : 0
   name              = "/ecs/${var.cluster_name}/exec"
   retention_in_days = 30
 }
