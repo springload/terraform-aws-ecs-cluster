@@ -141,11 +141,10 @@ resource "aws_ecs_cluster" "main" {
   name = var.cluster_name
 
   dynamic "configuration" {
-    for_each = var.enable_logging ? [1] : []
+    for_each = var.cluster_logging ? [1] : []
 
     content {
       execute_command_configuration {
-        kms_key_id = aws_kms_key.example.arn
         logging    = "OVERRIDE"
 
         log_configuration {
