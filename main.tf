@@ -19,7 +19,9 @@ resource "aws_launch_template" "LT" {
 
   instance_type          = var.instance_type
   vpc_security_group_ids = data.aws_security_group.group[*].id
-
+  network_interfaces {
+    associate_public_ip_address = false
+  }
 
   dynamic "metadata_options" {
     for_each = length(var.metadata_options) > 0 ? [1] : []
