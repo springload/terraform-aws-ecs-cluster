@@ -5,7 +5,6 @@ resource "aws_launch_template" "LT" {
 
   dynamic "instance_market_options" {
     for_each = var.spot ? [1] : []
-
     content {
       market_type = "spot"
     }
@@ -15,22 +14,14 @@ resource "aws_launch_template" "LT" {
     cpu_credits = var.cpu_unlimited ? "unlimited" : "standard"
   }
 
-  image_id = var.ami != "" ? data.aws_ami.ami[0].id : jsondecode(data.aws_ssm_parameter.recommended_ami[0].insecure_value).image_id
+  image_id      = var.ami != "" ? data.aws_ami.ami[0].id : jsondecode(data.aws_ssm_parameter.recommended_ami[0].insecure_value).image_id
+  instance_type = var.instance_type
 
-  instance_type          = var.instance_type
-  #vpc_security_group_ids = data.aws_security_group.group[*].id
-  network_interfaces {
-    associate_public_ip_address = false
-    ipv6_address_count          = 1
-    security_groups             = data.aws_security_group.group.*.id
-    device_index                = 0
-
-  }
+  # Remove network_interfaces block and use vpc_security_groups_ids instead
+  vpc_security_group_ids = data.aws_security_group.group.*.id
 
   dynamic "metadata_options" {
     for_each = length(var.metadata_options) > 0 ? [1] : []
-
-    # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/launch_template#metadata-options
     content {
       http_endpoint               = lookup(var.metadata_options, "http_endpoint", "enabled")
       http_tokens                 = lookup(var.metadata_options, "http_tokens", "optional")
@@ -46,20 +37,19 @@ resource "aws_launch_template" "LT" {
 
   block_device_mappings {
     device_name = "/dev/xvda"
-
     ebs {
       volume_size           = var.disk_size
-      volume_type           = var.disk_type
+      volume_type          = var.disk_type
       delete_on_termination = true
-      encrypted             = var.disk_encrypted
+      encrypted            = var.disk_encrypted
     }
   }
 
-  key_name   = var.ec2_key_name
-  user_data  = data.cloudinit_config.config[0].rendered
+  key_name  = var.ec2_key_name
+  user_data = data.cloudinit_config.config[0].rendered
+
   depends_on = [aws_iam_instance_profile.ec2-instance-role]
 }
-
 resource "aws_autoscaling_group" "ASG" {
   count = var.instances_desired > 0 || var.instances_autoscale_max > 0 ? 1 : 0
 
