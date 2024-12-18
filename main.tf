@@ -18,7 +18,7 @@ resource "aws_launch_template" "LT" {
   image_id = var.ami != "" ? data.aws_ami.ami[0].id : jsondecode(data.aws_ssm_parameter.recommended_ami[0].insecure_value).image_id
 
   instance_type          = var.instance_type
-  vpc_security_group_ids = data.aws_security_group.group[*].id
+  #vpc_security_group_ids = data.aws_security_group.group[*].id
   network_interfaces {
     associate_public_ip_address = false
     ipv6_address_count          = 1
