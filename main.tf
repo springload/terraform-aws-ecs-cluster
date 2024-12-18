@@ -21,6 +21,7 @@ resource "aws_launch_template" "LT" {
   vpc_security_group_ids = data.aws_security_group.group[*].id
   network_interfaces {
     associate_public_ip_address = false
+    ipv6_address_count          = 1
     security_groups             = data.aws_security_group.group[*].id
 
   }
