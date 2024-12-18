@@ -22,7 +22,8 @@ resource "aws_launch_template" "LT" {
   network_interfaces {
     associate_public_ip_address = false
     ipv6_address_count          = 1
-    security_groups             = data.aws_security_group.group[*].id
+    security_groups             = data.aws_security_group.group.*.id
+    device_index                = 0
 
   }
 
