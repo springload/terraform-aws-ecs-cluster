@@ -18,7 +18,7 @@ resource "aws_launch_template" "LT" {
   instance_type = var.instance_type
 
   # Remove network_interfaces block and use vpc_security_groups_ids instead
-  vpc_security_group_ids = data.aws_security_group.group.*.id
+  vpc_security_group_ids = data.aws_security_group.group[*].id
 
   dynamic "metadata_options" {
     for_each = length(var.metadata_options) > 0 ? [1] : []
@@ -39,9 +39,9 @@ resource "aws_launch_template" "LT" {
     device_name = "/dev/xvda"
     ebs {
       volume_size           = var.disk_size
-      volume_type          = var.disk_type
+      volume_type           = var.disk_type
       delete_on_termination = true
-      encrypted            = var.disk_encrypted
+      encrypted             = var.disk_encrypted
     }
   }
 
