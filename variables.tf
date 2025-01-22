@@ -108,3 +108,9 @@ variable "vpc_name" {
   description = "VPC name. If not set, will default to \"default\""
   default     = ""
 }
+
+variable "disk_kms_key_id" {
+  type        = string
+  description = "KMS key ID for EBS volume encryption. Using AWS managed key by default."
+  default     = "alias/aws/ebs"
+}
