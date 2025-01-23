@@ -46,7 +46,7 @@ resource "aws_launch_template" "LT" {
       volume_type           = var.disk_type
       delete_on_termination = true
       encrypted             = var.disk_encrypted
-      kms_key_id            = var.disk_encrypted ? (var.disk_kms_key_id != "" ? var.disk_kms_key_id : null) : null
+      kms_key_id           = (var.disk_kms_key_id != "" && startswith(var.disk_kms_key_id, "arn:aws:kms:")) ? var.disk_kms_key_id : null
     }
   }
 
